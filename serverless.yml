@@ -1,0 +1,38 @@
+service: linux-ec2-start
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: ap-south-1
+  stage: ${opt:stage, 'dev'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents 
+      Resource: "arn:aws:logs:*:*:*"
+    - Effect: Allow
+      Action:
+        - ec2:Start*
+        - ec2:Stop*
+        - ec2:DescribeInstances
+        - ec2:DescribeTags
+        - ec2:DescribeInstanceTypes
+        - ec2:DescribeInstanceStatus
+      Resource: "*"   
+
+functions:
+  startEc2Instances:
+    handler: handler.lambda_handler
+    name: linux-ec2-start
+    description: Lambda function to start linux machine 
+    events:
+      - schedule: cron(25 06 ? * MON-FRI *)
+      
+resources:
+  Resources:
+    IamRoleLambdaExecution:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: linux-ec2-start
