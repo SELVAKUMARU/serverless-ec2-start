@@ -28,7 +28,7 @@ functions:
     name: linux-ec2-start
     description: Lambda function to start linux machine 
     events:
-      - schedule: cron(25 06 ? * MON-FRI *)
+      - schedule: cron(43 06 ? * MON-FRI *)
       
 resources:
   Resources:
